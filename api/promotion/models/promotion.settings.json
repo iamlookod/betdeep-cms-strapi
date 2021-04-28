@@ -1,8 +1,8 @@
 {
   "kind": "collectionType",
-  "collectionName": "rewards",
+  "collectionName": "promotions",
   "info": {
-    "name": "Reward",
+    "name": "promotion",
     "description": ""
   },
   "options": {
@@ -14,11 +14,11 @@
     "title": {
       "type": "string"
     },
-    "point": {
-      "type": "integer"
+    "description": {
+      "type": "richtext"
     },
     "image": {
-      "model": "file",
+      "collection": "file",
       "via": "related",
       "allowedTypes": [
         "images",
@@ -27,17 +27,6 @@
       ],
       "plugin": "upload",
       "required": false
-    },
-    "description": {
-      "type": "richtext"
-    },
-    "took_reward": {
-      "type": "integer",
-      "default": 0
-    },
-    "balance": {
-      "type": "integer",
-      "default": 0
     }
   }
 }

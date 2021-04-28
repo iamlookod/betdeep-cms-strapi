@@ -1,0 +1,49 @@
+{
+  "kind": "collectionType",
+  "collectionName": "bonuses",
+  "info": {
+    "name": "bonus"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "type_of_bonus": {
+      "type": "enumeration",
+      "enum": [
+        "fix",
+        "percent"
+      ]
+    },
+    "bonus": {
+      "type": "integer"
+    },
+    "effective_date": {
+      "type": "date"
+    },
+    "expire_date": {
+      "type": "date"
+    },
+    "is_active": {
+      "type": "boolean"
+    },
+    "type_transaction_bonus": {
+      "type": "enumeration",
+      "enum": [
+        "deposit",
+        "transferin"
+      ]
+    },
+    "max": {
+      "type": "integer"
+    }
+  }
+}

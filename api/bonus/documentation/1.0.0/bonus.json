@@ -1,6 +1,6 @@
 {
   "paths": {
-    "/rewards": {
+    "/bonuses": {
       "get": {
         "deprecated": false,
         "description": "",
@@ -12,7 +12,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Reward"
+                    "$ref": "#/components/schemas/Bonus"
                   }
                 }
               }
@@ -51,7 +51,7 @@
         },
         "summary": "",
         "tags": [
-          "Reward"
+          "Bonus"
         ],
         "parameters": [
           {
@@ -201,7 +201,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Reward"
+                  "$ref": "#/components/schemas/Bonus"
                 }
               }
             }
@@ -239,7 +239,7 @@
         },
         "summary": "",
         "tags": [
-          "Reward"
+          "Bonus"
         ],
         "requestBody": {
           "description": "",
@@ -247,14 +247,14 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewReward"
+                "$ref": "#/components/schemas/NewBonus"
               }
             }
           }
         }
       }
     },
-    "/rewards/count": {
+    "/bonuses/count": {
       "get": {
         "deprecated": false,
         "description": "",
@@ -306,12 +306,12 @@
         },
         "summary": "",
         "tags": [
-          "Reward"
+          "Bonus"
         ],
         "parameters": []
       }
     },
-    "/rewards/{id}": {
+    "/bonuses/{id}": {
       "get": {
         "deprecated": false,
         "description": "",
@@ -321,7 +321,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Reward"
+                  "$ref": "#/components/schemas/Bonus"
                 }
               }
             }
@@ -359,7 +359,7 @@
         },
         "summary": "",
         "tags": [
-          "Reward"
+          "Bonus"
         ],
         "parameters": [
           {
@@ -383,7 +383,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Reward"
+                  "$ref": "#/components/schemas/Bonus"
                 }
               }
             }
@@ -421,7 +421,7 @@
         },
         "summary": "",
         "tags": [
-          "Reward"
+          "Bonus"
         ],
         "requestBody": {
           "description": "",
@@ -429,7 +429,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewReward"
+                "$ref": "#/components/schemas/NewBonus"
               }
             }
           }
@@ -495,7 +495,7 @@
         },
         "summary": "",
         "tags": [
-          "Reward"
+          "Bonus"
         ],
         "parameters": [
           {
@@ -514,7 +514,7 @@
   },
   "components": {
     "schemas": {
-      "Reward": {
+      "Bonus": {
         "required": [
           "id"
         ],
@@ -525,86 +525,39 @@
           "title": {
             "type": "string"
           },
-          "point": {
-            "type": "integer"
-          },
-          "image": {
-            "required": [
-              "id",
-              "name",
-              "hash",
-              "mime",
-              "size",
-              "url",
-              "provider"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string"
-              },
-              "alternativeText": {
-                "type": "string"
-              },
-              "caption": {
-                "type": "string"
-              },
-              "width": {
-                "type": "integer"
-              },
-              "height": {
-                "type": "integer"
-              },
-              "formats": {
-                "type": "object"
-              },
-              "hash": {
-                "type": "string"
-              },
-              "ext": {
-                "type": "string"
-              },
-              "mime": {
-                "type": "string"
-              },
-              "size": {
-                "type": "number"
-              },
-              "url": {
-                "type": "string"
-              },
-              "previewUrl": {
-                "type": "string"
-              },
-              "provider": {
-                "type": "string"
-              },
-              "provider_metadata": {
-                "type": "object"
-              },
-              "related": {
-                "type": "string"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
-          },
           "description": {
             "type": "string"
           },
-          "took_reward": {
-            "type": "integer",
-            "default": 0
+          "type_of_bonus": {
+            "type": "string",
+            "enum": [
+              "fix",
+              "percent"
+            ]
           },
-          "balance": {
-            "type": "integer",
-            "default": 0
+          "bonus": {
+            "type": "integer"
+          },
+          "effective_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "expire_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "type_transaction_bonus": {
+            "type": "string",
+            "enum": [
+              "deposit",
+              "transferin"
+            ]
+          },
+          "max": {
+            "type": "integer"
           },
           "published_at": {
             "type": "string",
@@ -612,24 +565,44 @@
           }
         }
       },
-      "NewReward": {
+      "NewBonus": {
         "properties": {
           "title": {
             "type": "string"
           },
-          "point": {
-            "type": "integer"
-          },
           "description": {
             "type": "string"
           },
-          "took_reward": {
-            "type": "integer",
-            "default": 0
+          "type_of_bonus": {
+            "type": "string",
+            "enum": [
+              "fix",
+              "percent"
+            ]
           },
-          "balance": {
-            "type": "integer",
-            "default": 0
+          "bonus": {
+            "type": "integer"
+          },
+          "effective_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "expire_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "type_transaction_bonus": {
+            "type": "string",
+            "enum": [
+              "deposit",
+              "transferin"
+            ]
+          },
+          "max": {
+            "type": "integer"
           },
           "published_at": {
             "type": "string",
@@ -647,7 +620,7 @@
   },
   "tags": [
     {
-      "name": "Reward"
+      "name": "Bonus"
     }
   ]
 }
