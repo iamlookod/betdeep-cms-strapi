@@ -6,6 +6,10 @@ module.exports = {
       formidable: {
         maxFileSize: 200 * 1024 * 1024 // Defaults to 200mb
       }
+    },
+    cors: {
+      enabled: true,
+      origin: ['*']
     }
   },
 };
