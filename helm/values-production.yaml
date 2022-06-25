@@ -1,0 +1,16 @@
+ingress:
+  enabled: true
+  class: external
+  hosts:
+    - host: cms.betdeep.net
+      paths:
+        - path: /
+          serviceName: betdeep-cms-strapi
+
+hpa:
+  minReplicas: 2
+  maxReplicas: 20
+
+nodeSelector:
+  tier: production
+
