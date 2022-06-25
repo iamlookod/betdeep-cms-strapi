@@ -112,4 +112,8 @@ exports
 *.cache
 build
 .strapi-updater.json
+
+.dockerignore
+Dockerfile
+Jenkinsfile
 .env.*.local

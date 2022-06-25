@@ -1,0 +1,28 @@
+replicaCount: 2
+
+image:
+  name: 701128946362.dkr.ecr.ap-southeast-1.amazonaws.com/betdeep-cms-strapi
+  tag: 'latest'
+
+name: 'betdeep-cms-strapi'
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1024Mi
+  requests:
+    cpu: 500m
+    memory: 512Mi
+
+configmap:
+  enabled: false
+
+secret:
+  enabled: false
+
+secret_extarnal:
+  enabled: true
+
+tolerations: []
+
+affinity: {}
