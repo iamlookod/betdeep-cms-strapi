@@ -34,7 +34,7 @@ pipeline {
             steps {
                 script{
                     if (env.BRANCH_NAME == 'main') {
-                        sh "helm -n betdeep-production upgrade -i betdeep-cms-strapi helm/ -f helm/values.yaml -f helm/values-production.yaml --atomic --set image.tag=${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
+                        sh "helm -n app upgrade -i betdeep-cms-strapi helm/ -f helm/values.yaml -f helm/values-production.yaml --atomic --set image.tag=${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
                     } else {
                         sh "helm -n betdeep-develop upgrade -i betdeep-cms-strapi helm/ -f helm/values.yaml -f helm/values-develop.yaml --atomic --set image.tag=${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
                     }
