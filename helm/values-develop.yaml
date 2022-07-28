@@ -1,6 +1,8 @@
 ingress:
   enabled: true
-  class: external
+  class: alb
+  lbName: alb-betdeep-dev
+  groupName: betdeep-dev
   hosts:
     - host: dev-cms.betdeep.net
       paths:
@@ -11,4 +13,4 @@ hpa:
   maxReplicas: 4
 
 nodeSelector:
-  tier: develop
+  tier: app
