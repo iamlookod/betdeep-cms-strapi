@@ -1,0 +1,81 @@
+name: Deploy to ArgoCD
+
+on:
+  push:
+    branches:
+      - "main"
+
+env:
+  AWS_REGION: ap-southeast-1
+  ECR_REPOSITORY: betdeep-cms-strapi
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.build-image.outputs.image }}
+      image-tag: ${{ steps.build-image.outputs.image-tag }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set outputs
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1-node16
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ steps.vars.outputs.sha_short }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+          echo "image-tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    needs: ["build"]
+    env:
+      GIT_EMAIL: support@dependabot.com
+      GIT_USERNAME: dependabot[bot]
+      GIT_TARGET_REPO: iamlookod/betdeep-argocd
+      GIT_BASE_BRANCH: main
+      IMAGE_TAG: ${{ needs.build.outputs.image-tag }}
+      CONFIG_PATH: services/betdeep-cms-strapi
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ env.GIT_TARGET_REPO }}
+          token: ${{ secrets.PAT }}
+
+      - name: Config git
+        run: |
+          git config --global user.email "$GIT_EMAIL"
+          git config --global user.name "$GIT_USERNAME"
+
+      - name: Update Gitops ArgoCD Prd
+        run: |
+          cd ${{ env.CONFIG_PATH }}
+          yq e ".betdeep-chart.image.tag=\"${{ env.IMAGE_TAG }}\"" -i values.yaml
+          git add .
+          git commit -m "Update ${{ env.CONFIG_PATH }} version ${{ env.IMAGE_TAG }}"
+          git push origin $GIT_BASE_BRANCH
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
